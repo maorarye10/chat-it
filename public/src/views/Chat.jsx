@@ -34,6 +34,7 @@ export const Chat = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([{}]);
+  const [selectedContact, setSelectedContact] = useState(undefined);
   
   const toastOptions = {
     position: "bottom-right",
@@ -75,11 +76,15 @@ export const Chat = () => {
     }
   }, [user]);
 
+  const handleContactSelected = (contact) => {
+    setSelectedContact(contact);
+  }
+
   return (
     <>
       <Container>
         <div className="content">
-          <Contacts contacts = {contacts} user={user} />
+          <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
         </div>
       </Container>
     </>

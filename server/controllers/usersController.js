@@ -116,11 +116,11 @@ module.exports.setAvatar = async (req, res) => {
 module.exports.getUserContacts = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    console.log("User's contacts:", user.contacts);
+    //console.log("User's contacts:", user.contacts);
     const contacts = await User.find({
       _id: { $in: user.contacts },
     }).select(["email", "username", "avatarImage", "_id"]);
-    console.log("Contacts:", contacts);
+    //console.log("Contacts:", contacts);
     res.status(200).send({ contacts: contacts });
   } catch (error) {
     res.status(500).send({
