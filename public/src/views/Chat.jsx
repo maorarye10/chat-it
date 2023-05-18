@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { getUserContactsRoute } from '../utils/APIRoutes';
-import { toast } from 'react-toastify';
-import { Contacts } from '../components/Contacts';
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { getUserContactsRoute } from '../utils/APIRoutes'
+import { toast } from 'react-toastify'
+import { Contacts } from '../components/Contacts'
+import { Welcome } from '../components/Welcome'
+import { ChatContainer } from '../components/ChatContainer'
 
 const Container = styled.div`
   height: 100vh;
@@ -34,7 +36,8 @@ export const Chat = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([{}]);
-  const [selectedContact, setSelectedContact] = useState(undefined);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   const toastOptions = {
     position: "bottom-right",
@@ -66,6 +69,7 @@ export const Chat = () => {
       axios.get(`${getUserContactsRoute}/${user._id}`).then((response) => {
         //console.log("Contact:", response.data.contacts);
         setContacts(response.data.contacts);
+        setIsLoaded(true);
       }).catch((err) => {
         if (err.response.status === 500){
           toast.error("An error occured. Please try again Later.", toastOptions);
@@ -82,11 +86,17 @@ export const Chat = () => {
 
   return (
     <>
-      <Container>
-        <div className="content">
-          <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
-        </div>
-      </Container>
+      {
+        isLoaded &&
+        <Container>
+          <div className="content">
+            <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
+            {
+              selectedContact ? <ChatContainer contact={selectedContact} /> : <Welcome user={user} />
+            }
+          </div>
+        </Container>
+      }
     </>
   )
 }

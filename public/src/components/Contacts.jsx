@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../assets/logo.svg'
 
@@ -90,16 +90,7 @@ const Container = styled.div`
 `;
 
 export const Contacts = ({ contacts, user, handleContactSelection }) => {
-  const [username, setUsername] = useState("");
-  const [avatar, setAvatar] = useState("");
   const [selectedContact, setSelectedContact] = useState(undefined);
-
-  useEffect(() => {
-      if(user){
-          setUsername(user.username);
-          setAvatar(user.avatarImage);
-      }
-  }, [user]);
 
   const changeSelectedContact = (index, contact) => {
     setSelectedContact(index);
@@ -107,31 +98,25 @@ export const Contacts = ({ contacts, user, handleContactSelection }) => {
   }
 
   return (
-    <>
-      {
-        username && avatar && (
-          <Container>
-            <div className="brand">
-              <img src={Logo} alt="App Logo" />
-              <h3>CHAT-IT</h3>
+    <Container>
+      <div className="brand">
+        <img src={Logo} alt="App Logo" />
+        <h3>CHAT-IT</h3>
+      </div>
+      <div className="contacts-list">
+        {contacts.map((contact, index) => {
+          return (
+            <div className={`contact${index === selectedContact ? ' selected' : ''}`} key={index} onClick={() => changeSelectedContact(index, contact)}>
+              <img className='avatar' src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="Contact Image" />
+              <h3 className='username'>{contact.username}</h3>
             </div>
-            <div className="contacts-list">
-              {contacts.map((contact, index) => {
-                return (
-                  <div className={`contact${index === selectedContact ? ' selected' : ''}`} key={index} onClick={() => changeSelectedContact(index, contact)}>
-                    <img className='avatar' src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="Contact Image" />
-                    <h3 className='username'>{contact.username}</h3>
-                  </div>
-                )
-              })}
-            </div>
-            <div className="user">
-              <img className='avatar' src={`data:image/svg+xml;base64,${avatar}`} alt="Contact Image" />
-              <h2 className='username'>{username}</h2>
-            </div>
-          </Container>
-        )
-      }
-    </>
+          )
+        })}
+      </div>
+      <div className="user">
+        <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
+        <h2 className='username'>{user.username}</h2>
+      </div>
+    </Container>
   )
 }

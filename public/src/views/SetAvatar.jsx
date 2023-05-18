@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import Loader from '../assets/loader.gif';
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
-import { setAvatarRoute } from '../utils/APIRoutes';
-import { useAvatarsFetch } from '../hooks/useAvatarsFetch';
-import { Buffer } from 'buffer';
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import Loader from '../assets/loader.gif'
+import { ToastContainer, toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css'
+import axios from 'axios'
+import { setAvatarRoute } from '../utils/APIRoutes'
+import { useAvatarsFetch } from '../hooks/useAvatarsFetch'
 
 const Container = styled.div`
     height: 100vh;
