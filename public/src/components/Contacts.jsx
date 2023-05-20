@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../assets/logo.svg'
+import { Logout } from './Logout';
 
 const Container = styled.div`
   display: grid;
@@ -63,18 +64,26 @@ const Container = styled.div`
     }
   }
 
-  .user {
+  .footer {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 2rem;
+    justify-content: space-between;
     background-color: #0d0d30;
+    padding: 0 1.5rem;
 
-    .avatar {
-      height: 4rem;
-      max-inline-size: 100%;
+    .user {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+  
+      .avatar {
+        height: 4rem;
+        max-inline-size: 100%;
+      }
     }
   }
+
 
   .username {
     color: white;
@@ -113,10 +122,14 @@ export const Contacts = ({ contacts, user, handleContactSelection }) => {
           )
         })}
       </div>
-      <div className="user">
-        <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
-        <h2 className='username'>{user.username}</h2>
+      <div className="footer">
+        <div className="user">
+          <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
+          <h2 className='username'>{user.username}</h2>
+        </div>
+        <Logout />
       </div>
+      
     </Container>
   )
 }

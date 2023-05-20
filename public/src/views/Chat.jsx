@@ -24,7 +24,6 @@ const Container = styled.div`
     background-color: #00000076;
     display: grid;
     grid-template-columns: 1fr 3fr;
-    padding: 3rem 5rem;
     border-radius: 2rem;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
       grid-template-columns: 35% 65%;

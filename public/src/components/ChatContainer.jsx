@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Logout } from './Logout';
 
 const Container = styled.div`
     padding-top: 1rem;
@@ -35,7 +34,6 @@ export const ChatContainer = ({ contact }) => {
                 <img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="Contact's Avatar" />
                 <h3>{contact.username}</h3>
             </div>
-            <Logout />
         </div>
         <div className="chat-content"></div>
         <div className="chat-input"></div>
