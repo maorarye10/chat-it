@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { ChatInput } from './ChatInput';
+import { ChatContent } from './ChatContent';
 
 const Container = styled.div`
     padding-top: 1rem;
@@ -27,16 +29,21 @@ const Container = styled.div`
 `;
 
 export const ChatContainer = ({ contact }) => {
-  return (
-    <Container>
-        <div className="chat-header">
-            <div className="contact-details">
-                <img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="Contact's Avatar" />
-                <h3>{contact.username}</h3>
+
+    const handleSendMsg = async (msg) => {
+
+    }
+
+    return (
+        <Container>
+            <div className="chat-header">
+                <div className="contact-details">
+                    <img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="Contact's Avatar" />
+                    <h3>{contact.username}</h3>
+                </div>
             </div>
-        </div>
-        <div className="chat-content"></div>
-        <div className="chat-input"></div>
-    </Container>
-  )
+            <ChatContent />
+            <ChatInput handleSendMsg={handleSendMsg}/>
+        </Container>
+    )
 }
