@@ -38,6 +38,7 @@ const Container = styled.div`
                     --epr-hover-bg-color: #9a86f3;
                     --epr-focus-bg-color: #9a86f3;
 
+                    //Figure out this part.
                     .emoji-scroll-wrapper::-webkit-scrollbar {
                         background-color: #080420;
                         width: 5px;
