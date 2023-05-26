@@ -23,7 +23,7 @@ const Container = styled.div`
 
                 svg {
                     font-size: 1.5rem;
-                    color: #ffff00c8;
+                    color: white;
                     cursor: pointer;
                 }
 
@@ -39,7 +39,7 @@ const Container = styled.div`
                     --epr-focus-bg-color: #9a86f3;
 
                     //Figure out this part.
-                    .emoji-scroll-wrapper::-webkit-scrollbar {
+                    .epr-body::-webkit-scrollbar {
                         background-color: #080420;
                         width: 5px;
 
@@ -64,8 +64,8 @@ const Container = styled.div`
                 height: 100%;
                 background-color: transparent;
                 color: white;
-                border: 1px solid red;
-                padding-left: 1rem;
+                border: none;
+                padding: 0.5rem 0 0.5rem 1rem;
                 font-size: 1.2rem;
 
                 &::selection {
@@ -113,6 +113,14 @@ export const ChatInput = ({ handleSendMsg }) => {
         setMsg(msg);
     }
 
+    const sendMsg = (event) => {
+        event.preventDefault();
+        if (msg.length > 0){
+            handleSendMsg(msg);
+            setMsg('');
+        }
+    }
+
     return (
         <Container>
             <div className="emoji-container">
@@ -123,9 +131,9 @@ export const ChatInput = ({ handleSendMsg }) => {
                     }
                 </div>
             </div>
-            <form>
+            <form onSubmit={sendMsg}>
                 <input type="text" placeholder='type your message here' value={msg} onChange={e => handleTextChange(e.target.value)}/>
-                <button> 
+                <button type='submit'> 
                     <IoMdSend />
                 </button>
             </form>
