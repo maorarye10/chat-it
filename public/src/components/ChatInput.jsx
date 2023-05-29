@@ -29,7 +29,7 @@ const Container = styled.div`
 
                 .EmojiPickerReact {
                     position: absolute;
-                    top: -29rem;
+                    top: -30rem;
                     box-shadow: 0 5px 10px #9a86f3;
                     border-color: #9a86f3;
                     --epr-bg-color: #080420;
