@@ -1,4 +1,4 @@
-const User = require("../models/userModel");
+const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const { ValidEmail, ValidPassword } = require("../util/RegexValidations");
 
@@ -35,18 +35,18 @@ module.exports.register = async (req, res) => {
 
     const { username, email, password } = req.body;
 
-    const emailCheck = await User.findOne({ email: email });
+    const emailCheck = await userModel.findOne({ email: email });
     if (emailCheck) {
       return res.status(400).send({ message: "Email is already in use" });
     }
 
-    const usernameCheck = await User.findOne({ username: username });
+    const usernameCheck = await userModel.findOne({ username: username });
     if (usernameCheck) {
       return res.status(400).send({ message: "Username is already in use" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({
+    const user = await userModel.create({
       email: email,
       username: username,
       password: hashedPassword,
@@ -65,7 +65,7 @@ module.exports.login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username: username });
+    const user = await userModel.findOne({ username: username });
     if (!user) {
       return res.status(404).send({ message: "Wrong username or password" });
     }
@@ -94,7 +94,7 @@ module.exports.setAvatar = async (req, res) => {
       return res.status(400).send({ message: "You need to selecct an avatar" });
     }
 
-    const user = await User.findByIdAndUpdate(
+    const user = await userModel.findByIdAndUpdate(
       userId,
       {
         avatarImage: avatar,
@@ -115,11 +115,13 @@ module.exports.setAvatar = async (req, res) => {
 
 module.exports.getUserContacts = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await userModel.findById(req.params.id);
     //console.log("User's contacts:", user.contacts);
-    const contacts = await User.find({
-      _id: { $in: user.contacts },
-    }).select(["email", "username", "avatarImage", "_id"]);
+    const contacts = await userModel
+      .find({
+        _id: { $in: user.contacts },
+      })
+      .select(["email", "username", "avatarImage", "_id"]);
     //console.log("Contacts:", contacts);
     res.status(200).send({ contacts: contacts });
   } catch (error) {
