@@ -6,6 +6,6 @@ const {
 const router = express.Router();
 
 router.post("/addMessage", addMessage);
-router.post("/getMessages/:id", getAllMessages);
+router.post("/getMessages", getAllMessages);
 
 module.exports = router;

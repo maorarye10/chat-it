@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { getUserContactsRoute } from '../utils/APIRoutes'
-import { toast } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import { Contacts } from '../components/Contacts'
 import { Welcome } from '../components/Welcome'
 import { ChatContainer } from '../components/ChatContainer'
@@ -87,14 +87,17 @@ export const Chat = () => {
     <>
       {
         isLoaded &&
-        <Container>
-          <div className="content">
-            <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
-            {
-              selectedContact ? <ChatContainer contact={selectedContact} /> : <Welcome user={user} />
-            }
-          </div>
-        </Container>
+        <>
+          <Container>
+            <div className="content">
+              <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
+              {
+                selectedContact ? <ChatContainer contact={selectedContact} user={user} /> : <Welcome user={user} />
+              }
+            </div>
+          </Container>
+          <ToastContainer />
+        </>
       }
     </>
   )

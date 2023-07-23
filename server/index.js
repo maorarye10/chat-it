@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const http = require("http");
 const userRoutes = require("./routes/userRoutes");
+const messagesRoutes = require("./routes/messagesRoutes");
 
 const app = express();
 require("dotenv").config();
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/user", userRoutes);
+app.use("/api/messages", messagesRoutes);
 
 const server = http.createServer(app);
 

@@ -29,7 +29,7 @@ const Container = styled.div`
 
                 .EmojiPickerReact {
                     position: absolute;
-                    top: -30rem;
+                    top: -500px;
                     box-shadow: 0 5px 10px #9a86f3;
                     border-color: #9a86f3;
                     --epr-bg-color: #080420;
@@ -61,7 +61,6 @@ const Container = styled.div`
 
             input {
                 width: 100%;
-                height: 100%;
                 background-color: transparent;
                 color: white;
                 border: none;
