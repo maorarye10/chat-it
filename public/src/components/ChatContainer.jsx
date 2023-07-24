@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { ChatInput } from './ChatInput';
-import { ChatContent } from './ChatContent';
 import axios from 'axios';
 import { getAllMessagesRoute, sendMessageRoute } from '../utils/APIRoutes';
 import { toast } from 'react-toastify';
+import {v4 as uuidv4} from 'uuid';
 
 const Container = styled.div`
     padding-top: 1rem;
@@ -44,6 +44,15 @@ const Container = styled.div`
         gap: 1rem;
         overflow: auto;
 
+        &::-webkit-scrollbar {
+            width: 0.2rem;
+            &-thumb {
+                background-color: #ffffff39;
+                width: 0.1rem;
+                border-radius: 1rem;
+            }
+        }
+
         .message {
             display: flex;
             align-items: center;
@@ -76,8 +85,10 @@ const Container = styled.div`
     }
 `;
 
-export const ChatContainer = ({ contact, user }) => {
+export const ChatContainer = ({ contact, user, socket }) => {
     const [messages, setMessages] = useState([]);
+    const [arrivedMessage, setArrivedMessage] = useState(null);
+    const scrollRef = useRef();
 
     const toastOptions = {
         position: "bottom-right",
@@ -88,12 +99,30 @@ export const ChatContainer = ({ contact, user }) => {
     }
 
     useEffect(() => {
-        axios.post(getAllMessagesRoute, {
-            user: user._id,
-            contact: contact._id
-        }).then(response => {
-            setMessages(response.data);
-        });
+        if (socket.current){
+            socket.current.on("message-recieved", (msg) => {
+                setArrivedMessage({fromSelf: false, message: msg})
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        arrivedMessage && setMessages([...messages, arrivedMessage]);
+    }, [arrivedMessage]);
+
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({behaviour: "smooth"});
+    }, [messages])
+
+    useEffect(() => {
+        if(contact){
+            axios.post(getAllMessagesRoute, {
+                user: user._id,
+                contact: contact._id
+            }).then(response => {
+                setMessages(response.data);
+            });
+        }
     }, [contact]);
 
     const handleSendMsg = async (msg) => {
@@ -104,6 +133,10 @@ export const ChatContainer = ({ contact, user }) => {
         }).catch(error => {
             toast.error(error.response.data.message, toastOptions);
         })
+        socket.current.emit("send-message", contact._id, msg);
+        const updatedMessages = [...messages];
+        updatedMessages.push({fromSelf: true, message: msg});
+        setMessages(updatedMessages);
     }
 
     return (
@@ -116,11 +149,13 @@ export const ChatContainer = ({ contact, user }) => {
             </div>
             <div className="chat-messages">
                 {
-                    messages.map((msg, index) => (
-                        <div key={index} className={`message ${msg.fromSelf ? "sended" : "received"}`}>
-                            <p className='message-content'>
-                                {msg.message}
-                            </p>
+                    messages.map((msg) => (
+                        <div ref={scrollRef} key={uuidv4()}>
+                            <div className={`message ${msg.fromSelf ? "sended" : "received"}`}>
+                                <p className='message-content'>
+                                    {msg.message}
+                                </p>
+                            </div>
                         </div>
                     ))
                 }

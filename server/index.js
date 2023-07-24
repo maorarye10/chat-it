@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const http = require("http");
 const userRoutes = require("./routes/userRoutes");
 const messagesRoutes = require("./routes/messagesRoutes");
+const socket = require("socket.io");
 
 const app = express();
 require("dotenv").config();
@@ -31,3 +32,26 @@ mongoose
   .catch((err) => {
     console.log(`ERROR: ${err.message}`);
   });
+
+const io = socket(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    credentials: true,
+  },
+});
+
+global.onlineUsers = new Map();
+
+io.on("connection", (socket) => {
+  global.chatSocket = socket;
+  socket.on("add-user", (userId) => {
+    onlineUsers.set(userId, socket.id);
+  });
+
+  socket.on("send-message", (reciverId, message) => {
+    const targetSocket = onlineUsers.get(reciverId);
+    if (targetSocket) {
+      socket.to(targetSocket).emit("message-recieved", message);
+    }
+  });
+});

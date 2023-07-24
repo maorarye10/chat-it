@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { getUserContactsRoute } from '../utils/APIRoutes'
+import { getUserContactsRoute, host } from '../utils/APIRoutes'
 import { ToastContainer, toast } from 'react-toastify'
 import { Contacts } from '../components/Contacts'
 import { Welcome } from '../components/Welcome'
 import { ChatContainer } from '../components/ChatContainer'
+import {io} from 'socket.io-client'
 
 const Container = styled.div`
   height: 100vh;
@@ -32,6 +33,7 @@ const Container = styled.div`
 `;
 
 export const Chat = () => {
+  const socket = useRef();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([{}]);
@@ -76,6 +78,9 @@ export const Chat = () => {
           toast.error(err.response.data.message, toastOptions);
         }
       });
+
+      socket.current = io(host);
+      socket.current.emit("add-user", user._id);
     }
   }, [user]);
 
@@ -92,7 +97,7 @@ export const Chat = () => {
             <div className="content">
               <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
               {
-                selectedContact ? <ChatContainer contact={selectedContact} user={user} /> : <Welcome user={user} />
+                selectedContact ? <ChatContainer contact={selectedContact} user={user} socket={socket} /> : <Welcome user={user} />
               }
             </div>
           </Container>
