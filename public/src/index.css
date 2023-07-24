@@ -1,5 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;200;300;400;500;600;700&display=swap");
 
+:root {
+  /* sizes */
+  --size-xxs: 0.63rem;
+  --size-xs: 0.75rem;
+  --size-sm: 0.875rem;
+  --size-base: 1rem;
+  --size-lg: 1.125rem;
+  --size-xl: 1.25rem;
+  --size-2xl: 1.5rem;
+  --size-3xl: 1.875rem;
+  --size-4xl: 2.25rem;
+  --size-5xl: 3rem;
+  --size-6xl: 3.75rem;
+  --size-7xl: 4.5rem;
+  --size-8xl: 6rem;
+  --size-9xl: 8rem;
+  --size-10xl: 10rem;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,12 +29,6 @@ body,
 button,
 input {
   font-family: "Josefin Sans", sans-serif;
-}
-
-body {
-  max-height: 100vh;
-  max-width: 100vw;
-  overflow: hidden;
 }
 
 .Toastify__toast-body {

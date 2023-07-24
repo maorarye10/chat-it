@@ -6,23 +6,24 @@ import { ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
 import { loginRoute } from '../utils/APIRoutes'
+import { Wrapper } from '../components/Wrapper'
 
 const FromContainer = styled.div`
   height: 100vh;
-  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   background-color: #131324;
+  font-size: var(--size-xxs);
   .brand {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
     img {
-      height: 5rem;
+      height: 3.5rem;
     }
     h1 {
       color: white;
@@ -92,6 +93,45 @@ const FromContainer = styled.div`
     0%   {opacity: 1;}
     100% {opacity: 0;}
   }
+
+  /* xs */
+ @media (min-width: 475px) {
+    font-size: var(--size-xs);
+    .brand {
+      img {
+        height: 4rem;
+      }
+    }
+ } 
+
+/* sm */
+ @media (min-width: 640px) {
+    font-size: var(--size-sm);
+    .brand {
+      img {
+        height: 4.5rem;
+      }
+    }
+ } 
+
+/* md */
+ @media (min-width: 768px) {
+    font-size: var(--size-base);
+    .brand {
+      img {
+        height: 5rem;
+      }
+    }
+ } 
+
+/* lg */
+ /* @media (min-width: 1024px) {} */ 
+
+/* xl */
+ /* @media (min-width: 1280px) {} */ 
+
+/*2xl */
+ /* @media (min-width: 1536px) {} */ 
 `;
 
 export const Login = () => {
@@ -164,7 +204,7 @@ export const Login = () => {
   }
 
   return (
-    <>
+    <Wrapper>
       <FromContainer>
         <form onSubmit={(event) => handleSubmit(event)}>
           <div className="brand">
@@ -178,6 +218,6 @@ export const Login = () => {
         </form>
       </FromContainer>
       <ToastContainer />
-    </>
+    </Wrapper>
   )
 }
