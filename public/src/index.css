@@ -25,6 +25,10 @@
   box-sizing: border-box;
 }
 
+html {
+  background-color: #131324;
+}
+
 body,
 button,
 input {

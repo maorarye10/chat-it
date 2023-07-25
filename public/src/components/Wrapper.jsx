@@ -2,11 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   background-color: #131324;
+  border: solid 1px red;
+
 
   /* xs */
   @media (min-width: 475px) {
@@ -33,10 +36,6 @@ const Container = styled.div`
   @media (min-width: 1024px) {
     .container {
       max-width: 1024px;
-    }
-
-    .section {
-      margin-top: 10rem;
     }
   }
 

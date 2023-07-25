@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
 import { loginRoute } from '../utils/APIRoutes'
 import { Wrapper } from '../components/Wrapper'
+import '../utils/CSSUtil.css'
 
 const FromContainer = styled.div`
   height: 100vh;
@@ -95,34 +96,20 @@ const FromContainer = styled.div`
   }
 
   /* xs */
- @media (min-width: 475px) {
-    font-size: var(--size-xs);
-    .brand {
-      img {
-        height: 4rem;
-      }
-    }
- } 
+ @media (min-width: 475px) {} 
 
 /* sm */
  @media (min-width: 640px) {
-    font-size: var(--size-sm);
-    .brand {
-      img {
-        height: 4.5rem;
-      }
+  font-size: var(--size-base);
+  .brand {
+    img {
+      height: 5rem;
     }
- } 
+  }
+} 
 
 /* md */
- @media (min-width: 768px) {
-    font-size: var(--size-base);
-    .brand {
-      img {
-        height: 5rem;
-      }
-    }
- } 
+ @media (min-width: 768px) {} 
 
 /* lg */
  /* @media (min-width: 1024px) {} */ 
@@ -204,20 +191,20 @@ export const Login = () => {
   }
 
   return (
-    <Wrapper>
-      <FromContainer>
-        <form onSubmit={(event) => handleSubmit(event)}>
-          <div className="brand">
-            <img src={Logo} alt="Logo" />
-            <h1>Chat-it</h1>
-          </div>
-          <input type="text" placeholder='Username' name='username' maxLength={20} onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-          <input type="password" placeholder='Password' name='password' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-          <button type='submit' formNoValidate="formnovalidate">Login</button>
-          <span>Don't have an account ? <Link to='/register'>Register</Link></span>
-        </form>
+    <>
+      <FromContainer className='container'>
+          <form onSubmit={(event) => handleSubmit(event)}>
+            <div className="brand">
+              <img src={Logo} alt="Logo" />
+              <h1>Chat-it</h1>
+            </div>
+            <input type="text" placeholder='Username' name='username' maxLength={20} onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+            <input type="password" placeholder='Password' name='password' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+            <button type='submit' formNoValidate="formnovalidate">Login</button>
+            <span>Don't have an account ? <Link to='/register'>Register</Link></span>
+          </form>
       </FromContainer>
       <ToastContainer />
-    </Wrapper>
+    </>
   )
 }
