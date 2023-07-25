@@ -95,21 +95,21 @@ const FromContainer = styled.div`
     100% {opacity: 0;}
   }
 
-  /* xs */
- @media (min-width: 475px) {} 
+/* xs */
+ /* @media (min-width: 475px) {} */ 
 
-/* sm */
- @media (min-width: 640px) {
-  font-size: var(--size-base);
-  .brand {
-    img {
-      height: 5rem;
-    }
-  }
-} 
+ /* sm */
+ /* @media (min-width: 640px) {} */ 
 
 /* md */
- @media (min-width: 768px) {} 
+  @media (min-width: 768px) {
+    font-size: var(--size-base);
+    .brand {
+      img {
+        height: 5rem;
+      }
+    }
+  }  
 
 /* lg */
  /* @media (min-width: 1024px) {} */ 
@@ -118,7 +118,7 @@ const FromContainer = styled.div`
  /* @media (min-width: 1280px) {} */ 
 
 /*2xl */
- /* @media (min-width: 1536px) {} */ 
+ /* @media (min-width: 1536px) {} */
 `;
 
 export const Login = () => {

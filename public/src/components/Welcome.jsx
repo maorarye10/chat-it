@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Robot from '../assets/robot.gif'
 
 const Container = styled.div`
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -7,23 +7,24 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ValidEmail, ValidPassword } from '../utils/RegexValidations'
 import axios from 'axios'
 import { registerRoute } from '../utils/APIRoutes'
+import '../utils/CSSUtil.css'
 
 const FromContainer = styled.div`
   height: 100vh;
-  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   background-color: #131324;
+  font-size: var(--size-xxs);
   .brand {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 1rem;
     img {
-      height: 5rem;
+      height: 3.5rem;
     }
     h1 {
       color: white;
@@ -93,6 +94,31 @@ const FromContainer = styled.div`
     0%   {opacity: 1;}
     100% {opacity: 0;}
   }
+
+ /* xs */
+ /* @media (min-width: 475px) {} */ 
+
+ /* sm */
+ /* @media (min-width: 640px) {} */ 
+
+  /* md */
+  @media (min-width: 768px) {
+    font-size: var(--size-base);
+    .brand {
+      img {
+        height: 5rem;
+      }
+    }
+  }  
+
+ /* lg */
+ /* @media (min-width: 1024px) {} */ 
+
+ /* xl */
+ /* @media (min-width: 1280px) {} */ 
+
+ /*2xl */
+ /* @media (min-width: 1536px) {} */
 `;
   
 export const Register = () => {
@@ -176,7 +202,7 @@ export const Register = () => {
 
   return (
     <>
-      <FromContainer>
+      <FromContainer className='container'>
         <form onSubmit={(event) => handleSubmit(event)}>
           <div className="brand">
             <img src={Logo} alt="Logo" />

@@ -2,19 +2,22 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../assets/logo.svg'
 import { Logout } from './Logout';
+import '../utils/CSSUtil.css'
 
 const Container = styled.div`
+  height: 100%;
   display: grid;
   grid-template-rows: 10% 75% 15%;
   overflow: hidden;
   background-color: #080420;
   border-radius: 2rem 0 0 2rem;
+  font-size: var(--size-xs);
 
   .brand {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.5rem;
 
     img {
       height: 2rem;
@@ -22,6 +25,7 @@ const Container = styled.div`
     h3 {
       color: white;
       text-transform: uppercase;
+      font-size: 1.2rem
     }
   }
 
@@ -30,7 +34,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     overflow: auto;
-    gap: 0.8rem;
+    gap: 0.4rem;
 
     .contact {
       background-color: #ffffff39;
@@ -39,13 +43,13 @@ const Container = styled.div`
       cursor: pointer;
       border-radius: 0.2rem;
       padding: 0.4rem;
-      gap: 1rem;
+      gap: 0.5rem;
       display: flex;
       align-items: center;
       transition: 0.2s;
 
       .avatar {
-        height: 3rem;
+        height: 2.5rem;
       }
     }
     
@@ -70,16 +74,16 @@ const Container = styled.div`
     align-items: center;
     justify-content: space-between;
     background-color: #0d0d30;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
 
     .user {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
+      gap: 0.75rem;
   
       .avatar {
-        height: 4rem;
+        height: 3rem;
         max-inline-size: 100%;
       }
     }
@@ -90,13 +94,7 @@ const Container = styled.div`
     color: white;
   }
 
-  @media screen and (min-width: 720px) and (max-width: 1080px) {
-    gap: 0.5rem;
-
-    .username {
-      font-size: 1rem;
-    }
-  }
+  
 `;
 
 export const Contacts = ({ contacts, user, handleContactSelection }) => {

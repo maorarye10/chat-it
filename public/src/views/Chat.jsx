@@ -11,7 +11,6 @@ import {io} from 'socket.io-client'
 
 const Container = styled.div`
   height: 100vh;
-  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,16 +19,74 @@ const Container = styled.div`
   gap: 1rem;
 
   .content {
-    height: 85vh;
-    width: 85vw;
+    height: 85%;
+    width: 85%;
     background-color: #00000076;
     display: grid;
-    grid-template-columns: 1fr 3fr;
     border-radius: 2rem;
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%;
+    overflow: hidden;
+
+    .chat-area-container {
+      max-height: 85vh;
+      display: none;
+    }
+
+    .contacts-container {
+      display: none;
+    }
+
+    .visible-mobile {
+      display: block;
     }
   }
+
+
+  @keyframes loadPage {
+    0%   {opacity: 0;}
+    100% {opacity: 1;}
+  }
+  @keyframes deloadPage {
+    0%   {opacity: 1;}
+    100% {opacity: 0;}
+  }
+
+  /* xs */
+  /* @media (min-width: 475px) {} */ 
+
+  /* sm */
+  /* @media (min-width: 640px) {} */ 
+
+  /* md */
+  @media (min-width: 768px) {font-size: var(--size-base);
+    .content {
+      grid-template-columns: 1.5fr 2.5fr;
+      .chat-area-container {
+        display: block;
+      }
+      .contacts-container{
+        display: block;
+      }
+    }}  
+
+  /* lg */
+  @media (min-width: 1024px) {
+    font-size: var(--size-base);
+    .content {
+      grid-template-columns: 1fr 3fr;
+      .chat-area-container {
+        display: block;
+      }
+      .contacts-container{
+        display: block;
+      }
+    }
+  } 
+
+  /* xl */
+  /* @media (min-width: 1280px) {} */ 
+
+  /*2xl */
+  /* @media (min-width: 1536px) {} */
 `;
 
 export const Chat = () => {
@@ -95,10 +152,14 @@ export const Chat = () => {
         <>
           <Container>
             <div className="content">
-              <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
-              {
-                selectedContact ? <ChatContainer contact={selectedContact} user={user} socket={socket} /> : <Welcome user={user} />
-              }
+              <div className={selectedContact && 'contacts-container'}>
+                <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
+              </div>
+              <div className={`chat-area-container ${selectedContact && 'visible-mobile'}`}>
+                {
+                  selectedContact ? <ChatContainer contact={selectedContact} user={user} socket={socket} /> : <Welcome user={user} />
+                }
+              </div>
             </div>
           </Container>
           <ToastContainer />

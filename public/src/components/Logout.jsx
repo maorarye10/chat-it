@@ -2,6 +2,7 @@ import React from 'react'
 import {BiPowerOff} from 'react-icons/bi'
 import styled from 'styled-components'
 import {useNavigate} from 'react-router-dom'
+import '../utils/CSSUtil.css'
 
 const Button = styled.button`
   display: flex;
@@ -13,7 +14,7 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   svg {
-    font-size: 1.3rem;
+    font-size: 0.8rem;
     color: white;
   }
 `;

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import {v4 as uuidv4} from 'uuid';
 
 const Container = styled.div`
+    height: 100%;
     padding-top: 1rem;
     display: grid;
     grid-template-rows: 10% 78% 12%;
