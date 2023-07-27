@@ -10,12 +10,9 @@ const Container = styled.div`
     height: 100%;
     padding-top: 1rem;
     display: grid;
-    grid-template-rows: 10% 78% 12%;
+    grid-template-rows: 11.5% 73% 15.5%;
     gap: 0.1rem;
     overflow: hidden;
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-        grid-template-rows: 15% 70% 15%;
-    }
 
     .chat-header {
         display: flex;
@@ -29,11 +26,12 @@ const Container = styled.div`
             gap: 1rem;
 
             img {
-                height: 3rem;
+                height: 2.5rem;
             }
 
             h3 {
                 color: white;
+                
             }
         }
     }
@@ -59,7 +57,7 @@ const Container = styled.div`
             align-items: center;
 
             .message-content {
-                max-width: 40%;
+                max-width: 80%;
                 overflow-wrap: break-word;
                 padding: 1rem;
                 font-size: 1.1rem;

@@ -2,7 +2,6 @@ import React from 'react'
 import {BiPowerOff} from 'react-icons/bi'
 import styled from 'styled-components'
 import {useNavigate} from 'react-router-dom'
-import '../utils/CSSUtil.css'
 
 const Button = styled.button`
   display: flex;

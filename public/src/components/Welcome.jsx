@@ -9,13 +9,22 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     color: white;
+    font-size: var(--size-sm);
 
     img {
-        height: 20rem;
+        height: 17rem;
     }
 
     span {
         color: #4e0eff
+    }  
+
+    /* lg */
+    @media (min-width: 1024px) {
+        font-size: var(--size-base);
+        img {
+            height: 20rem;
+        }
     }
 `;
 

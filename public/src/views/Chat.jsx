@@ -57,7 +57,7 @@ const Container = styled.div`
   /* @media (min-width: 640px) {} */ 
 
   /* md */
-  @media (min-width: 768px) {font-size: var(--size-base);
+  @media (min-width: 768px) {
     .content {
       grid-template-columns: 1.5fr 2.5fr;
       .chat-area-container {
@@ -66,24 +66,22 @@ const Container = styled.div`
       .contacts-container{
         display: block;
       }
-    }}  
+    }
+  }  
 
   /* lg */
   @media (min-width: 1024px) {
-    font-size: var(--size-base);
     .content {
-      grid-template-columns: 1fr 3fr;
-      .chat-area-container {
-        display: block;
-      }
-      .contacts-container{
-        display: block;
-      }
+      grid-template-columns: 1.2fr 2.8fr;
     }
   } 
 
   /* xl */
-  /* @media (min-width: 1280px) {} */ 
+  @media (min-width: 1280px) {
+    .content {
+      grid-template-columns: 1fr 3fr;
+    }
+  } 
 
   /*2xl */
   /* @media (min-width: 1536px) {} */
@@ -150,7 +148,7 @@ export const Chat = () => {
       {
         isLoaded &&
         <>
-          <Container>
+          <Container className='container'>
             <div className="content">
               <div className={selectedContact && 'contacts-container'}>
                 <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>

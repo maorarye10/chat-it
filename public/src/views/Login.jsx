@@ -6,7 +6,6 @@ import { ToastContainer, toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
 import { loginRoute } from '../utils/APIRoutes'
-import { Wrapper } from '../components/Wrapper'
 import '../utils/CSSUtil.css'
 
 const FromContainer = styled.div`

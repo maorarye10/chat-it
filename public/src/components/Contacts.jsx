@@ -2,30 +2,37 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import Logo from '../assets/logo.svg'
 import { Logout } from './Logout';
-import '../utils/CSSUtil.css'
 
 const Container = styled.div`
   height: 100%;
   display: grid;
-  grid-template-rows: 10% 75% 15%;
+  grid-template-rows: 15% 70% 15%;
   overflow: hidden;
   background-color: #080420;
   border-radius: 2rem 0 0 2rem;
   font-size: var(--size-xs);
-
-  .brand {
+  
+  .header {
     display: flex;
+    justify-content: space-between;
+    /* grid-template-columns: 1fr 2fr 1fr; */
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    padding: 0 1.25rem;
 
-    img {
-      height: 2rem;
-    }
-    h3 {
-      color: white;
-      text-transform: uppercase;
-      font-size: 1.2rem
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+  
+      img {
+        height: 2rem;
+      }
+      h3 {
+        color: white;
+        text-transform: uppercase;
+        font-size: 1.2rem
+      }
     }
   }
 
@@ -94,7 +101,57 @@ const Container = styled.div`
     color: white;
   }
 
+  /* xs */
+  /* @media (min-width: 475px) {} */ 
+
+  /* sm */
+  @media (min-width: 640px) {
+    .header {
+      padding: 0 1.7rem;
+    }
+  } 
+
+  /* md */
+  @media (min-width: 768px) {
+    .header {
+      padding: 0;
+      justify-content: space-around;
+    }
+  }  
+
+  /* lg */
+  @media (min-width: 1024px) {
+    font-size: var(--size-sm);
+  }
+
+  /* xl */
+  @media (min-width: 1280px) {
+    font-size: var(--size-base);
+    .header {
+      .brand {
+        gap: 1rem;
+    
+        img {
+          height: 2.5rem;
+        }
+        h3 {
+          font-size: 1.5rem;
+        }
+      }
+    }
+    
+
+    .contacts-list {
+      gap: 0.8rem;
   
+      .contact {
+        gap: 1rem;
+  
+        .avatar {
+          height: 3rem;
+        }
+      }
+  } 
 `;
 
 export const Contacts = ({ contacts, user, handleContactSelection }) => {
@@ -107,9 +164,13 @@ export const Contacts = ({ contacts, user, handleContactSelection }) => {
 
   return (
     <Container>
-      <div className="brand">
-        <img src={Logo} alt="App Logo" />
-        <h3>CHAT-IT</h3>
+      <div className='header'>
+        <Logout />
+        <div className="brand">
+          <img src={Logo} alt="App Logo" />
+          <h3>CHAT-IT</h3>
+        </div>
+        <Logout />
       </div>
       <div className="contacts-list">
         {contacts.map((contact, index) => {
@@ -126,7 +187,6 @@ export const Contacts = ({ contacts, user, handleContactSelection }) => {
           <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
           <h2 className='username'>{user.username}</h2>
         </div>
-        <Logout />
       </div>
       
     </Container>

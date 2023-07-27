@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import EmojiPicker from 'emoji-picker-react'
 import {IoMdSend} from 'react-icons/io'
 import {BsEmojiSmileFill} from 'react-icons/bs'
 
 const Container = styled.div`
-        display: grid;
-        grid-template-columns: 5% 95%;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
         background-color: #080420;
-        padding: 0 2rem;
+        padding: 0 1rem;
         padding-bottom: 0.3rem;
+        gap: 1rem;
         @media screen and (min-width: 720px) and (max-width: 1080px) {
             padding: 0 1rem;
             gap: 1rem;
@@ -81,7 +82,7 @@ const Container = styled.div`
             }
            
             button {
-                padding: 0.3rem 2rem;
+                padding: 0.3rem 0.8rem;
                 border-radius: 2rem;
                 display: flex;
                 justify-content: center;
@@ -89,15 +90,9 @@ const Container = styled.div`
                 background-color: #9a86f3;
                 border: none;
                 cursor: pointer;
-                @media screen and (min-width: 720px) and (max-width: 1080px) {
-                    padding: 0.3rem; 1rem;
-                    svg {
-                        font-size: 1rem;
-                    }
-                }
     
                 svg {
-                    font-size: 2rem;
+                    font-size: 1.5rem;
                     color: white; 
                 }
             }
@@ -111,7 +106,7 @@ export const ChatInput = ({ handleSendMsg }) => {
     const ToggleEmojiPickerVisibility = () => {
         setIsEmojiPickerShown(!isEmojiPickerShown);
     }
-
+    
     const handleEmojiClick = (emoji) => {
         let message = msg;
         message += emoji.emoji;
