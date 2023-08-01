@@ -8,6 +8,7 @@ import { Contacts } from '../components/Contacts'
 import { Welcome } from '../components/Welcome'
 import { ChatContainer } from '../components/ChatContainer'
 import {io} from 'socket.io-client'
+import { ContactProvider } from '../Context/contactContext'
 
 const Container = styled.div`
   height: 100vh;
@@ -35,7 +36,7 @@ const Container = styled.div`
       display: none;
     }
 
-    .visible-mobile {
+    .show-chat-mobile {
       display: block;
     }
   }
@@ -139,7 +140,7 @@ export const Chat = () => {
     }
   }, [user]);
 
-  const handleContactSelected = (contact) => {
+  const handleContactChange = (contact) => {
     setSelectedContact(contact);
   }
 
@@ -148,19 +149,21 @@ export const Chat = () => {
       {
         isLoaded &&
         <>
-          <Container className='container'>
-            <div className="content">
-              <div className={selectedContact && 'contacts-container'}>
-                <Contacts contacts={contacts} user={user} handleContactSelection={handleContactSelected}/>
+          <ContactProvider>
+            <Container className='container'>
+              <div className="content">
+                <div className={selectedContact && 'contacts-container'}>
+                  <Contacts contacts={contacts} user={user} handleVisibility={handleContactChange}/>
+                </div>
+                <div className={`chat-area-container ${selectedContact && 'show-chat-mobile'}`}>
+                  {
+                    selectedContact ? <ChatContainer user={user} socket={socket} handleCloseChat={() => handleContactChange(null)} /> : <Welcome user={user} />
+                  }
+                </div>
               </div>
-              <div className={`chat-area-container ${selectedContact && 'visible-mobile'}`}>
-                {
-                  selectedContact ? <ChatContainer contact={selectedContact} user={user} socket={socket} /> : <Welcome user={user} />
-                }
-              </div>
-            </div>
-          </Container>
-          <ToastContainer />
+            </Container>
+            <ToastContainer />
+          </ContactProvider>
         </>
       }
     </>

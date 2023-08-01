@@ -10,13 +10,8 @@ const Container = styled.div`
         align-items: center;
         background-color: #080420;
         padding: 0 1rem;
-        padding-bottom: 0.3rem;
-        gap: 1rem;
-        @media screen and (min-width: 720px) and (max-width: 1080px) {
-            padding: 0 1rem;
-            gap: 1rem;
-        }
-
+        gap: 0.7rem; //1
+        
         .emoji-container {
             display: flex;
             align-items: center;
@@ -27,7 +22,7 @@ const Container = styled.div`
                 position: relative;
 
                 svg {
-                    font-size: 1.5rem;
+                    font-size: 1.3rem; //1.5
                     color: white;
                     cursor: pointer;
                 }
@@ -69,8 +64,8 @@ const Container = styled.div`
                 background-color: transparent;
                 color: white;
                 border: none;
-                padding: 0.5rem 0 0.5rem 1rem;
-                font-size: 1.2rem;
+                padding: 0rem 0 0rem 0.7rem; // 0.5 0 0.5 1
+                font-size: 0.9rem; //1.2
 
                 &::selection {
                     background-color: #9a86f3;
@@ -92,11 +87,44 @@ const Container = styled.div`
                 cursor: pointer;
     
                 svg {
-                    font-size: 1.5rem;
+                    font-size: 1.1rem; //1.5
                     color: white; 
                 }
             }
         }
+
+  /* md */
+  @media (min-width: 768px) {}  
+
+  /* lg */
+  @media (min-width: 1024px) {
+    gap: 1rem; //1
+
+    .emoji-container {
+        .emoji {
+            svg {
+                font-size: 1.7rem; //1.5
+            }
+        }
+    }
+
+    form {
+        input {
+            padding: 0.5rem 0 0.5rem 1rem; // 0.5 0 0.5 1
+            font-size: 1.2rem; //1.2
+        }
+
+        button {
+            padding: 0.3rem 1.5rem;
+            svg {
+                font-size: 1.5rem; //1.5
+            }
+        }
+    }
+  }
+
+  /* xl */
+  @media (min-width: 1280px) {}
     `;
 
 export const ChatInput = ({ handleSendMsg }) => {

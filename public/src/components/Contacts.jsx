@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import Logo from '../assets/logo.svg'
 import { Logout } from './Logout';
+import { contactContext } from '../Context/contactContext';
 
 const Container = styled.div`
   height: 100%;
@@ -151,16 +152,24 @@ const Container = styled.div`
           height: 3rem;
         }
       }
+    }
+
+    .footer {
+      .user {
+        .avatar {
+          height: 3.5rem; 
+        }
+      }
+    }
   } 
 `;
 
-export const Contacts = ({ contacts, user, handleContactSelection }) => {
-  const [selectedContact, setSelectedContact] = useState(undefined);
+export const Contacts = ({ contacts, user, handleVisibility }) => {
+  const {contact: selectedContact, handleContactChange} = useContext(contactContext);
 
-  const changeSelectedContact = (index, contact) => {
-    setSelectedContact(index);
-    handleContactSelection(contact);
-  }
+  useEffect(() => {
+    handleVisibility(selectedContact);
+  }, [selectedContact])
 
   return (
     <Container>
@@ -175,7 +184,7 @@ export const Contacts = ({ contacts, user, handleContactSelection }) => {
       <div className="contacts-list">
         {contacts.map((contact, index) => {
           return (
-            <div className={`contact${index === selectedContact ? ' selected' : ''}`} key={index} onClick={() => changeSelectedContact(index, contact)}>
+            <div className={`contact${selectedContact && contact._id === selectedContact._id ? ' selected' : ''}`} key={index} onClick={() => handleContactChange(contact)}>
               <img className='avatar' src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="Contact Image" />
               <h3 className='username'>{contact.username}</h3>
             </div>
