@@ -56,7 +56,7 @@ module.exports.register = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to register new user. (api/auth/register)",
+        "An error occured while trying to register new user. (api/user/register)",
     });
   }
 };
@@ -80,7 +80,7 @@ module.exports.login = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to verify the user. (api/auth/login)",
+        "An error occured while trying to verify the user. (api/user/login)",
     });
   }
 };
@@ -108,7 +108,7 @@ module.exports.setAvatar = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to update the user's avatar. (api/auth/setAvatar)",
+        "An error occured while trying to update the user's avatar. (api/user/setAvatar)",
     });
   }
 };
@@ -127,7 +127,7 @@ module.exports.setAvatar = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to update the user's avatar. (api/auth/setAvatar)",
+        "An error occured while trying to update the user's avatar. (api/user/setAvatar)",
     });
   }
 }; */
@@ -145,7 +145,7 @@ module.exports.getUserContacts = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to update the user's avatar. (api/auth/setAvatar)",
+        "An error occured while trying to get the user's contacts. (api/user/setAvatar)",
     });
   }
 };

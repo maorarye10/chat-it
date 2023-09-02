@@ -16,6 +16,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/user", userRoutes);
 app.use("/api/messages", messagesRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Hello");
+});
+
 const server = http.createServer(app);
 
 mongoose
