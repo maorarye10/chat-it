@@ -6,14 +6,22 @@ const userRoutes = require("./routes/userRoutes");
 const messagesRoutes = require("./routes/messagesRoutes");
 const socket = require("socket.io");
 
+const clientUrl = process.env.CLIENT_URL;
 const app = express();
 require("dotenv").config();
 
 app.use(
   cors({
-    origin: "https://chat-it-client.vercel.app",
+    origin: clientUrl,
+    credentials: true,
   })
 );
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", clientUrl);
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -43,7 +51,7 @@ mongoose
 
 const io = socket(server, {
   cors: {
-    origin: "https://chat-it-client.vercel.app",
+    origin: clientUrl,
     credentials: true,
   },
 });
