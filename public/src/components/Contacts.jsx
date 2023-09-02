@@ -6,6 +6,7 @@ import { contactContext } from '../Context/contactContext';
 import {BiLogOut} from 'react-icons/bi'
 import {BsPersonAdd} from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify"
 
 const Container = styled.div`
   height: 100%;
@@ -170,10 +171,21 @@ const Container = styled.div`
 export const Contacts = ({ contacts, user, handleVisibility }) => {
   const {contact: selectedContact, handleContactChange} = useContext(contactContext);
   const navigate = useNavigate();
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 5000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: 'dark',
+  }
 
   const handleLoguotClick = () => {
     localStorage.clear();
     navigate('/login');
+  }
+
+  const handleAddFriends = () => {
+    toast.info("Coming soon!", toastOptions);
   }
 
   useEffect(() => {
@@ -190,7 +202,7 @@ export const Contacts = ({ contacts, user, handleVisibility }) => {
           <img src={Logo} alt="App Logo" />
           <h3>CHAT-IT</h3>
         </div>
-        <CustomBtn handleClick={handleLoguotClick}>
+        <CustomBtn handleClick={handleAddFriends}>
           <BsPersonAdd />
         </CustomBtn>
       </div>
