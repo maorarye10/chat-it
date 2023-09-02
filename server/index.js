@@ -39,7 +39,7 @@ mongoose
 
 const io = socket(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://chat-it-client.vercel.app",
     credentials: true,
   },
 });
