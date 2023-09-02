@@ -1,8 +1,11 @@
 import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import Logo from '../assets/logo.svg'
-import { Logout } from './Logout';
+import { CustomBtn } from './CustomBtn';
 import { contactContext } from '../Context/contactContext';
+import {BiLogOut} from 'react-icons/bi'
+import {BsPersonAdd} from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   height: 100%;
@@ -166,6 +169,12 @@ const Container = styled.div`
 
 export const Contacts = ({ contacts, user, handleVisibility }) => {
   const {contact: selectedContact, handleContactChange} = useContext(contactContext);
+  const navigate = useNavigate();
+
+  const handleLoguotClick = () => {
+    localStorage.clear();
+    navigate('/login');
+  }
 
   useEffect(() => {
     handleVisibility(selectedContact);
@@ -174,12 +183,16 @@ export const Contacts = ({ contacts, user, handleVisibility }) => {
   return (
     <Container>
       <div className='header'>
-        <Logout />
+        <CustomBtn handleClick={handleLoguotClick}>
+          <BiLogOut />
+        </CustomBtn>
         <div className="brand">
           <img src={Logo} alt="App Logo" />
           <h3>CHAT-IT</h3>
         </div>
-        <Logout />
+        <CustomBtn handleClick={handleLoguotClick}>
+          <BsPersonAdd />
+        </CustomBtn>
       </div>
       <div className="contacts-list">
         {contacts.map((contact, index) => {

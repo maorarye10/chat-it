@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 
 export const useAvatarsFetch = () => {
   //logic
-  const api = "https://api.multiavatar.com/45678945";
+  const api = process.env.REACT_APP_AVATAR_API_URL;
   const apiKey = process.env.REACT_APP_AVATAR_API_KEY;
   const [fetchCount, setFetchCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);

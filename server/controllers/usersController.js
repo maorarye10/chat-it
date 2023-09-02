@@ -113,13 +113,31 @@ module.exports.setAvatar = async (req, res) => {
   }
 };
 
-module.exports.getUserContacts = async (req, res) => {
+/* module.exports.getUserContacts = async (req, res) => {
   try {
     const user = await userModel.findById(req.params.id);
     //console.log("User's contacts:", user.contacts);
     const contacts = await userModel
       .find({
         _id: { $in: user.contacts },
+      })
+      .select(["email", "username", "avatarImage", "_id"]);
+    //console.log("Contacts:", contacts);
+    res.status(200).send({ contacts: contacts });
+  } catch (error) {
+    res.status(500).send({
+      message:
+        "An error occured while trying to update the user's avatar. (api/auth/setAvatar)",
+    });
+  }
+}; */
+
+module.exports.getUserContacts = async (req, res) => {
+  try {
+    const contacts = await userModel
+      .find({
+        _id: { $ne: req.params.id },
+        isAvatarImageSet: true,
       })
       .select(["email", "username", "avatarImage", "_id"]);
     //console.log("Contacts:", contacts);
