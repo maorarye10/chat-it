@@ -49,12 +49,7 @@ mongoose
     console.log(`ERROR: ${err.message}`);
   });
 
-const io = socket(server, {
-  cors: {
-    origin: clientUrl,
-    credentials: true,
-  },
-});
+const io = socket(server);
 
 global.onlineUsers = new Map();
 
