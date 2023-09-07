@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios'
 import { loginRoute } from '../utils/APIRoutes'
 import '../utils/CSSUtil.css'
+import Loader from '../assets/loader2.gif'
 
 const FromContainer = styled.div`
   height: 100vh;
@@ -39,6 +40,10 @@ const FromContainer = styled.div`
     padding: 3rem 5rem;
     animation-name: loadPage;
     animation-duration: 1s;
+
+    .loader {
+      max-inline-size: 100%;
+    }
     input {
       background-color: transparent;
       padding: 1rem;
@@ -122,6 +127,7 @@ const FromContainer = styled.div`
 
 export const Login = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
     username: '',
     password: '',
@@ -138,18 +144,9 @@ export const Login = () => {
       }
     }
   }, []);
-  
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 5000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: 'dark',
-  }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (handleSubmitValidation()) {
+  useEffect(() => {
+    if (loading) {
       axios.post(loginRoute, {...values}).then((response) => {
         localStorage.setItem('chat-app-user', JSON.stringify(response.data.user));
         if (response.data.user.isAvatarImageSet){
@@ -164,6 +161,22 @@ export const Login = () => {
           toast.error(err.response.data.message, toastOptions);
         }
       });
+      setLoading(false);
+    }
+  }, [loading])
+  
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 5000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: 'dark',
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (handleSubmitValidation()) {
+      setLoading(true);
     }
   }
 
@@ -197,10 +210,16 @@ export const Login = () => {
               <img src={Logo} alt="Logo" />
               <h1>Chat-it</h1>
             </div>
-            <input type="text" placeholder='Username' name='username' maxLength={20} onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-            <input type="password" placeholder='Password' name='password' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-            <button type='submit' formNoValidate="formnovalidate">Login</button>
-            <span>Don't have an account ? <Link to='/register'>Register</Link></span>
+            {
+              loading ?
+              <img src={Loader} alt='Loader gif' className='loader'/> :
+              <>
+                <input type="text" placeholder='Username' name='username' maxLength={20} onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+                <input type="password" placeholder='Password' name='password' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+                <button type='submit' formNoValidate="formnovalidate">Login</button>
+                <span>Don't have an account ? <Link to='/register'>Register</Link></span>
+              </>
+            }
           </form>
       </FromContainer>
       <ToastContainer />

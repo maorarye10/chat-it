@@ -4,15 +4,18 @@ import { Register } from "./views/Register";
 import { Login } from "./views/Login";
 import { Chat } from "./views/Chat";
 import { SetAvatar } from "./views/SetAvatar";
+import { AddContactScreenToggleContext } from "./Context/addContactScreenToggleContext";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/set-avatar" element={<SetAvatar />} />
-      <Route path="/" element={<Chat />} />
-    </Routes>
+    <AddContactScreenToggleContext>
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/set-avatar" element={<SetAvatar />} />
+        <Route path="/" element={<Chat />} />
+      </Routes>
+    </AddContactScreenToggleContext>
   );
 }
 

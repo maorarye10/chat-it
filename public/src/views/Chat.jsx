@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -9,6 +9,8 @@ import { Welcome } from '../components/Welcome'
 import { ChatContainer } from '../components/ChatContainer'
 import {io} from 'socket.io-client'
 import { ContactProvider } from '../Context/contactContext'
+import { addContactScreenToggleContext } from '../Context/addContactScreenToggleContext'
+import { AddContact } from '../components/AddContact'
 
 const Container = styled.div`
   height: 100vh;
@@ -95,6 +97,7 @@ export const Chat = () => {
   const [contacts, setContacts] = useState([{}]);
   const [selectedContact, setSelectedContact] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const {visible: addContactScreenVisible} = useContext(addContactScreenToggleContext);
   
   const toastOptions = {
     position: "bottom-right",
@@ -152,14 +155,20 @@ export const Chat = () => {
           <ContactProvider>
             <Container className='container'>
               <div className="content">
-                <div className={selectedContact && 'contacts-container'}>
-                  <Contacts contacts={contacts} user={user} handleVisibility={handleContactChange}/>
-                </div>
-                <div className={`chat-area-container ${selectedContact && 'show-chat-mobile'}`}>
-                  {
-                    selectedContact ? <ChatContainer user={user} socket={socket} handleCloseChat={() => handleContactChange(null)} /> : <Welcome user={user} />
-                  }
-                </div>
+                {
+                  addContactScreenVisible ?
+                  <AddContact /> :
+                  <>
+                    <div className={selectedContact && 'contacts-container'}>
+                    <Contacts contacts={contacts} user={user} handleVisibility={handleContactChange}/>
+                    </div>
+                    <div className={`chat-area-container ${selectedContact && 'show-chat-mobile'}`}>
+                      {
+                        selectedContact ? <ChatContainer user={user} socket={socket} handleCloseChat={() => handleContactChange(null)} /> : <Welcome user={user} />
+                      }
+                    </div>
+                  </>
+                }
               </div>
             </Container>
             <ToastContainer />

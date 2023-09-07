@@ -8,6 +8,7 @@ import { ValidEmail, ValidPassword } from '../utils/RegexValidations'
 import axios from 'axios'
 import { registerRoute } from '../utils/APIRoutes'
 import '../utils/CSSUtil.css'
+import Loader from '../assets/loader2.gif'
 
 const FromContainer = styled.div`
   height: 100vh;
@@ -40,6 +41,10 @@ const FromContainer = styled.div`
     padding: 3rem 5rem;
     animation-name: loadPage;
     animation-duration: 1s;
+
+    .loader {
+      max-inline-size: 100%;
+    }
     input {
       background-color: transparent;
       padding: 1rem;
@@ -123,6 +128,7 @@ const FromContainer = styled.div`
   
 export const Register = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
     username: '',
     email: '',
@@ -135,6 +141,22 @@ export const Register = () => {
       navigate('/set-avatar');
     }
   }, []);
+
+  useEffect(() => {
+    if (loading){
+      axios.post(registerRoute, {...values}).then((response) => {
+        localStorage.setItem('chat-app-user', JSON.stringify(response.data.user));
+        navigate('/set-avatar');
+      }).catch((err) => {
+        if (err.response.status === 500){
+          toast.error("An error occured. Please try again Later.", toastOptions);
+        }else{
+          toast.error(err.response.data.message, toastOptions);
+        }
+      });
+      setLoading(false);
+    }
+  }, [loading])
   
   const toastOptions = {
     position: "bottom-right",
@@ -147,16 +169,7 @@ export const Register = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (handleSubmitValidation()){
-      axios.post(registerRoute, {...values}).then((response) => {
-        localStorage.setItem('chat-app-user', JSON.stringify(response.data.user));
-        navigate('/set-avatar');
-      }).catch((err) => {
-        if (err.response.status === 500){
-          toast.error("An error occured. Please try again Later.", toastOptions);
-        }else{
-          toast.error(err.response.data.message, toastOptions);
-        }
-      });
+      setLoading(true);
     }
   }
 
@@ -208,12 +221,18 @@ export const Register = () => {
             <img src={Logo} alt="Logo" />
             <h1>Chat-it</h1>
           </div>
-          <input type="text" placeholder='Username' name='username' maxLength={20} onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-          <input type="email" placeholder='Email'  name='email' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-          <input type="password" placeholder='Password' name='password' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-          <input type="password" placeholder='Confirm Password' name='confirmPassword' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
-          <button type='submit' formNoValidate="formnovalidate">Register</button>
-          <span>Already have an account ? <Link to='/login'>Login</Link></span>
+          {
+            loading ?
+            <img src={Loader} alt='Loader gif' className='loader'/> :
+            <>
+              <input type="text" placeholder='Username' name='username' maxLength={20} onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+              <input type="email" placeholder='Email'  name='email' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+              <input type="password" placeholder='Password' name='password' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+              <input type="password" placeholder='Confirm Password' name='confirmPassword' onChange={e => handleChange(e)} onBlur={e => handleValidation(e)}/>
+              <button type='submit' formNoValidate="formnovalidate">Register</button>
+              <span>Already have an account ? <Link to='/login'>Login</Link></span>
+            </>
+          }
         </form>
       </FromContainer>
       <ToastContainer />

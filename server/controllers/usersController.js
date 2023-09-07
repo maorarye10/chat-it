@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const { ValidEmail, ValidPassword } = require("../util/RegexValidations");
+const { request } = require("express");
 
 const userValidation = ({ username, email, password, confirmPassword }) => {
   let status = 200;
@@ -142,6 +143,26 @@ module.exports.getUserContacts = async (req, res) => {
       .select(["email", "username", "avatarImage", "_id"]);
     //console.log("Contacts:", contacts);
     res.status(200).send({ contacts: contacts });
+  } catch (error) {
+    res.status(500).send({
+      message:
+        "An error occured while trying to get the user's contacts. (api/user/setAvatar)",
+    });
+  }
+};
+
+module.exports.getUsers = async (req, res) => {
+  try {
+    const { query } = req;
+    const usernameQuery = query.username || ".";
+    const users = await userModel
+      .find({
+        username: { $regex: usernameQuery, $options: "i" },
+        isAvatarImageSet: true,
+      })
+      .select(["email", "username", "avatarImage", "_id"]);
+    //console.log("Contacts:", contacts);
+    res.status(200).send({ users });
   } catch (error) {
     res.status(500).send({
       message:

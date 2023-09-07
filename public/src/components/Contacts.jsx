@@ -6,7 +6,8 @@ import { contactContext } from '../Context/contactContext';
 import {BiLogOut} from 'react-icons/bi'
 import {BsPersonAdd} from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from "react-toastify"
+/* import { ToastContainer, toast } from "react-toastify" */
+import { addContactScreenToggleContext } from '../Context/addContactScreenToggleContext';
 
 const Container = styled.div`
   height: 100%;
@@ -170,14 +171,15 @@ const Container = styled.div`
 
 export const Contacts = ({ contacts, user, handleVisibility }) => {
   const {contact: selectedContact, handleContactChange} = useContext(contactContext);
+  const {handleVisibilityToggle} = useContext(addContactScreenToggleContext);
   const navigate = useNavigate();
-  const toastOptions = {
+  /* const toastOptions = {
     position: "bottom-right",
     autoClose: 5000,
     pauseOnHover: true,
     draggable: true,
     theme: 'dark',
-  }
+  } */
 
   const handleLoguotClick = () => {
     localStorage.clear();
@@ -185,7 +187,8 @@ export const Contacts = ({ contacts, user, handleVisibility }) => {
   }
 
   const handleAddFriends = () => {
-    toast.info("Coming soon!", toastOptions);
+    /* toast.info("Coming soon!", toastOptions); */
+    handleVisibilityToggle();
   }
 
   useEffect(() => {

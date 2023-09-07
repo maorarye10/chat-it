@@ -113,7 +113,7 @@ const Container = styled.div`
     grid-template-rows: 15% 70% 15%; // 11.5 73 15.5
 
     .chat-header {
-        display: flex
+        display: flex;
         align-items: center;
         justify-content: start;
         padding: 0rem 1.2rem; //2
