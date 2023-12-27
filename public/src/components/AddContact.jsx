@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import {IoMdSearch} from 'react-icons/io'
+import {IoMdSearch, IoMdAdd, IoMdTime, IoMdArrowBack} from 'react-icons/io'
+import { BsFillEnvelopeFill, BsFillEnvelopeOpenFill } from "react-icons/bs"
 import Loader from '../assets/loader2.gif'
 import axios from 'axios'
-import { getUsersRoute } from '../utils/APIRoutes'
+import { getUsersRoute, getRequestsBySenderRoute, createRequestRoute } from '../utils/APIRoutes'
 import { toast } from 'react-toastify'
+import { CustomBtn } from './CustomBtn'
 
 const Container = styled.div`
     height: 100%;
@@ -13,49 +15,100 @@ const Container = styled.div`
     grid-template-rows: 15% 85%;
     place-items: center;
 
-    form {
-        width: 80%;
-        height: 2rem;
-        background-color: #ffffff34;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        border-radius: 2rem;
-
-        input {
-            color: white;
-            height: 100%;
-            width: 100%;
-            border-radius: 2rem;
-            padding-left: 0.7rem;
-            font-size: 0.9rem; //1.2
-            background-color: transparent;
-            border: none;
-
-            :focus {
-                outline: none;
-            }
-
-            &::selection {
-                background-color: #9a86f3;
-            }
-        }
+    .header {
+        display: grid;
+        grid-template-columns: 15% 70% 15%;
+        width: 90%;
 
         button {
-            border-radius: 2rem;
+            background-color: transparent;
             border: none;
-            height: 100%;
-            background-color: #9a86f3;
-            padding: 0.3rem 1rem;
             cursor: pointer;
-
             svg {
-                display: block;
-                font-size: 1.1rem;
+                font-size: 2rem;
                 color: white;
             }
         }
+
+        .back-btn {
+            margin-right: auto;
+        }
+
+        .requests-btn {
+            margin-left: auto;
+            svg {
+                font-size: 1.7rem;
+            }
+
+            .requests-count {
+                position: relative;
+            }
+
+            .requests-count::after {
+                content: attr(data-text);
+                background-color: Crimson;
+                width: 60%;
+                height: 60%;
+                position: absolute;
+                top: -0.2rem;
+                left: 1rem;
+                z-index: 1;
+                border-radius: 1rem;
+                font-size: 0.8rem;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        form {
+            width: 100%;
+            height: 2rem;
+            background-color: #ffffff34;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 2rem;
+
+            input {
+                color: white;
+                height: 100%;
+                width: 100%;
+                border-radius: 2rem;
+                padding-left: 0.7rem;
+                font-size: 0.9rem; //1.2
+                background-color: transparent;
+                border: none;
+
+                :focus {
+                    outline: none;
+                }
+
+                &::selection {
+                    background-color: #9a86f3;
+                }
+            }
+
+            button {
+                aspect-ratio: auto;
+                border-radius: 2rem;
+                border: none;
+                height: 100%;
+                background-color: #9a86f3;
+                padding: 0.3rem 1rem;
+                cursor: pointer;
+
+                svg {
+                    display: block;
+                    font-size: 1.1rem;
+                    color: white;
+                }
+            }
+        }
     }
+
+    
 
     .search-container {
         height: 100%;
@@ -96,30 +149,47 @@ const Container = styled.div`
 
             .user-card {
                 background-color: #ffffff39;
-                min-height: 5rem;
                 width: 90%;
                 border-radius: 0.2rem;
-                padding: 0.4rem;
-                gap: 0.5rem;
+                min-height: 5rem;
                 display: flex;
+                justify-content: space-between;
                 align-items: center;
                 animation-name: loadUserCard;
                 animation-duration: 0.5s;
 
-                .avatar {
-                    height: 2.5rem;
+
+                .user-info {
+                    padding: 0.4rem;
+                    gap: 0.5rem;
+                    display: flex;
+                    align-items: center;
+    
+                    .avatar {
+                        height: 2.5rem;
+                    }
                 }
-            }
+    
+                &::-webkit-scrollbar {
+                    width: 0.2rem;
+    
+                    &-thumb {
+                        background-color: #ffffff39;
+                        width: 0.1rem;
+                        border-radius: 1rem;
+                    }
+                }
 
-            &::-webkit-scrollbar {
-                width: 0.2rem;
+                button {
+                    margin-right: 0.4rem;
+                }
 
-                &-thumb {
+                .pending {
                     background-color: #ffffff39;
-                    width: 0.1rem;
-                    border-radius: 1rem;
+                    cursor: default;
                 }
             }
+
         }
     }   
 
@@ -129,10 +199,12 @@ const Container = styled.div`
     } 
 `
 
-export const AddContact = () => {
+export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, handleShowRequestsScreenToggle }) => {
     const [inputVal, setInputVal] = useState("");
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState(null);
+    const [friendRequests, setFriendRequests] = useState(null);
+    const [lastSearchInput, setLastSearchInput] = useState("");
 
     const toastOptions = {
         position: "bottom-right",
@@ -140,13 +212,31 @@ export const AddContact = () => {
         pauseOnHover: true,
         draggable: true,
         theme: 'dark',
-      }
+    }
+
+    useEffect(() => {
+        axios.get(`${getRequestsBySenderRoute}/${user._id}`)
+            .then((response) => {
+                setFriendRequests(response.data.requests);
+            })
+    }, []);
+
+    /* useEffect(() => {
+        if (friendRequests){
+            console.log(friendRequests);
+        }
+    }, [friendRequests]); */
 
     useEffect(() => {
         if (loading) {
-            axios.get(`${getUsersRoute}?username=${inputVal}`)
+            axios.get(`${getUsersRoute}?username=${inputVal}&hostUser=${user._id}`)
             .then((response) => {
-                setUsers(response.data.users);
+                const users = response.data.users
+                //console.log('users recived: ', users);
+                sortIncUsersById(users); // nlog(n)
+                const newUsers = removeIncomingRequestsUsers(users); // nlog(n)
+                //console.log("new users: ", newUsers);
+                setUsers(newUsers);
             }).catch((err) => {
                 if (err.response.status === 500){
                   toast.error("An error occured. Please try again Later.", toastOptions);
@@ -154,16 +244,69 @@ export const AddContact = () => {
                   toast.error(err.response.data.message, toastOptions);
                 }
                 setLoading(false);
-              });
+            });
         }
     }, [loading]);
 
     useEffect(() => {
         if (users){
-            console.log(users);
             setLoading(false);
         }
-    }, [users])
+    }, [users]);
+
+    useEffect(() => {
+        if (lastSearchInput){
+            setLoading(true);
+        }
+    }, [lastSearchInput]);
+
+    const sortIncUsersById = (users) => {
+        users.sort((userA, userB) => {
+            if (userA._id < userB._id){
+                return -1;
+            }
+            if (userA._id > userB._id){
+                return 1;
+            }
+            return 0;
+        });
+    }
+
+    const removeIncomingRequestsUsers = (users) => {
+        const usersIds = users.map((user) => user._id);
+        const usersCopy = [...users];
+        const newUsersArr = [];
+
+        incomingFriendRequests.forEach((request) => {
+            const index = binarySearch(usersIds, 0, usersIds.length - 1, request.sender._id);
+            usersCopy[index] = null;
+        });
+        usersCopy.forEach((user) => {
+            if (user){
+                newUsersArr.push(user);
+            }
+        })
+
+        return newUsersArr;
+    }
+
+    const binarySearch = (arr, start, end, val) => {
+        if (start > end){
+            return -1;
+        }
+
+        let mid = Math.floor((start + end) / 2);
+
+        if(arr[mid] === val){
+            return mid;
+        }
+
+        if (val > arr[mid]){
+            return binarySearch(arr, mid + 1, end, val);
+        }
+
+        return binarySearch(arr, start, mid - 1, val);
+    }
 
     const handleTextChange = (msg) => {
         setInputVal(msg);
@@ -171,19 +314,60 @@ export const AddContact = () => {
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();
-        if (inputVal.length > 0) {
-            setLoading(true);
+        if (inputVal.length > 0 && inputVal !== lastSearchInput) {
+            setLastSearchInput(inputVal);
         }
+    }
+
+    const handleSendFriendRequest = (index, reciverId) => {
+        const btn = document.querySelector(`#btn${index}`);
+        if (!btn.classList.contains('pending')){
+            const addSVG = document.querySelector(`#add${index}`);
+            const timeSVG = document.querySelector(`#time${index}`);
+    
+            btn.classList.add('pending');
+            addSVG.style.display = 'none';
+            timeSVG.style.display = 'inline';
+            console.log(btn);
+            console.log(addSVG);
+            console.log(timeSVG);
+
+            axios.post(createRequestRoute, {sender: user._id, reciver: reciverId}).then((response) => {
+                setFriendRequests([...friendRequests, response.data.request]);
+            }).catch((err) => {
+                if (err.response.status === 500){
+                  toast.error("An error occured. Please try again Later.", toastOptions);
+                }else{
+                  toast.error(err.response.data.message, toastOptions);
+                }
+            });
+        }
+    }
+
+    const handleGoBack = () => {
+        handleCloseScreen();
     }
 
   return (
     <Container>
-        <form onSubmit={handleSearchSubmit}>
-            <input type="text" placeholder='Search for new contacts' value={inputVal} onChange={(e) => handleTextChange(e.target.value)}/>
-            <button type='submit'>
-                <IoMdSearch />
+        <div className='header'>
+            <button className='back-btn' onClick={handleGoBack}>
+                <IoMdArrowBack />
             </button>
-        </form>
+            <form onSubmit={handleSearchSubmit}>
+                <input type="text" placeholder='Search for new contacts' value={inputVal} onChange={(e) => handleTextChange(e.target.value)}/>
+                <button type='submit'>
+                    <IoMdSearch />
+                </button>
+            </form>
+            <button className='requests-btn' onClick={handleShowRequestsScreenToggle}>
+                {
+                    incomingFriendRequests.length > 0 ? 
+                    <div data-text={incomingFriendRequests.length} className='requests-count'><BsFillEnvelopeFill /></div> : 
+                    <BsFillEnvelopeOpenFill />
+                }
+            </button>
+        </div>
         <div className='search-container'>
             {
                 !users ?
@@ -196,12 +380,25 @@ export const AddContact = () => {
                         <img src={Loader} alt='Loader gif' className='loader'/>:
                         <div className='users-list'>
                             {
+                                users.length === 0 ? 
+                                <div className='place-holder'>No users found</div>:
                                 users.map((user, index) => {
-                                    console.log(user.username);
                                     return (
                                         <div className='user-card' key={index}>
-                                            <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
-                                            <h3>{user.username}</h3>
+                                            <div className='user-info'>
+                                                <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
+                                                <h3>{user.username}</h3>
+                                            </div>
+                                            {
+                                                friendRequests.find((req) => req.reciver === user._id) ?
+                                                <CustomBtn id={`btn${index}`} className='pending'>
+                                                    <IoMdTime id={`time${index}`} />
+                                                </CustomBtn>:
+                                                <CustomBtn id={`btn${index}`} handleClick={() => handleSendFriendRequest(index, user._id)}>
+                                                    <IoMdAdd id={`add${index}`} />
+                                                    <IoMdTime id={`time${index}`} style={{display: 'none'}} />
+                                                </CustomBtn>
+                                            }
                                         </div>
                                     )
                                 })

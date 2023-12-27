@@ -194,8 +194,10 @@ export const ChatContainer = ({ user, socket, handleCloseChat }) => {
 
     useEffect(() => {
         if (socket.current){
-            socket.current.on("message-recieved", (msg) => {
-                setArrivedMessage({fromSelf: false, message: msg})
+            socket.current.on("message-recieved", (senderId, msg) => {
+                if (senderId === contact._id){
+                    setArrivedMessage({fromSelf: false, message: msg})
+                }
             });
         }
     }, []);
@@ -227,7 +229,7 @@ export const ChatContainer = ({ user, socket, handleCloseChat }) => {
         }).catch(error => {
             toast.error(error.response.data.message, toastOptions);
         })
-        socket.current.emit("send-message", contact._id, msg);
+        socket.current.emit("send-message", user._id, contact._id, msg);
         const updatedMessages = [...messages];
         updatedMessages.push({fromSelf: true, message: msg});
         setMessages(updatedMessages);

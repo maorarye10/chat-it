@@ -10,3 +10,10 @@ export const getUsersRoute = `${host}/api/user/users`;
 //messages
 export const sendMessageRoute = `${host}/api/messages/addMessage`;
 export const getAllMessagesRoute = `${host}/api/messages/getMessages`;
+
+//friendRequests
+export const createRequestRoute = `${host}/api/friendRequests/create`;
+export const getRequestsBySenderRoute = `${host}/api/friendRequests/bySender`;
+export const getRequestsByReciverRoute = `${host}/api/friendRequests/byReciver`;
+export const declineRequestRoute = `${host}/api/friendRequests/decline`;
+export const acceptRequestRoute = `${host}/api/friendRequests/accept`;

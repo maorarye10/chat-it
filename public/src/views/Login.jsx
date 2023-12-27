@@ -148,6 +148,7 @@ export const Login = () => {
   useEffect(() => {
     if (loading) {
       axios.post(loginRoute, {...values}).then((response) => {
+        //console.log(response.data.user);
         localStorage.setItem('chat-app-user', JSON.stringify(response.data.user));
         if (response.data.user.isAvatarImageSet){
           navigate('/');

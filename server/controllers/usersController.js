@@ -26,6 +26,28 @@ const userValidation = ({ username, email, password, confirmPassword }) => {
   };
 };
 
+module.exports.addContactToUser = async (userId, contactId) => {
+  const user = await userModel.findOneAndUpdate(
+    { _id: userId, contacts: { $nin: [contactId] } },
+    { $push: { contacts: contactId } },
+    { new: true }
+  );
+
+  user.password = undefined;
+  return user;
+};
+
+module.exports.removeContactFromUser = async (userId, contactId) => {
+  const user = await userModel.findByIdAndUpdate(
+    userId,
+    { $pull: { contacts: contactId } },
+    { new: true }
+  );
+
+  user.password = undefined;
+  return user;
+};
+
 module.exports.register = async (req, res) => {
   //console.log(req.body);
   try {
@@ -52,7 +74,7 @@ module.exports.register = async (req, res) => {
       username: username,
       password: hashedPassword,
     });
-    delete user.password;
+    user.password = undefined;
     res.status(200).send({ user: user });
   } catch (error) {
     res.status(500).send({
@@ -76,7 +98,7 @@ module.exports.login = async (req, res) => {
       return res.status(404).send({ message: "Wrong username or password" });
     }
 
-    delete user.password;
+    user.password = undefined;
     res.status(200).send({ user: user });
   } catch (error) {
     res.status(500).send({
@@ -104,7 +126,7 @@ module.exports.setAvatar = async (req, res) => {
       { new: true }
     );
 
-    delete user.password;
+    user.password = undefined;
     res.status(200).send({ user: user });
   } catch (error) {
     res.status(500).send({
@@ -114,7 +136,7 @@ module.exports.setAvatar = async (req, res) => {
   }
 };
 
-/* module.exports.getUserContacts = async (req, res) => {
+module.exports.getUserContacts = async (req, res) => {
   try {
     const user = await userModel.findById(req.params.id);
     //console.log("User's contacts:", user.contacts);
@@ -128,12 +150,12 @@ module.exports.setAvatar = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to update the user's avatar. (api/user/setAvatar)",
+        "An error occured while trying to update the user's avatar. (api/user/userContacts)",
     });
   }
-}; */
+};
 
-module.exports.getUserContacts = async (req, res) => {
+/* module.exports.getUserContacts = async (req, res) => {
   try {
     const contacts = await userModel
       .find({
@@ -146,17 +168,22 @@ module.exports.getUserContacts = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to get the user's contacts. (api/user/setAvatar)",
+        "An error occured while trying to get the user's contacts. (api/user/userContacts)",
     });
   }
-};
+}; */
 
 module.exports.getUsers = async (req, res) => {
   try {
     const { query } = req;
     const usernameQuery = query.username || ".";
+    const hostUserQuery = query.hostUser || "";
+    const hostUser = await userModel
+      .findOne({ _id: hostUserQuery })
+      .select(["_id", "contacts"]);
     const users = await userModel
       .find({
+        _id: { $nin: [hostUser._id, ...hostUser.contacts] },
         username: { $regex: usernameQuery, $options: "i" },
         isAvatarImageSet: true,
       })
@@ -166,7 +193,7 @@ module.exports.getUsers = async (req, res) => {
   } catch (error) {
     res.status(500).send({
       message:
-        "An error occured while trying to get the user's contacts. (api/user/setAvatar)",
+        "An error occured while trying to get the users. (api/user/users)",
     });
   }
 };

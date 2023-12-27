@@ -5,6 +5,7 @@ const http = require("http");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const messagesRoutes = require("./routes/messagesRoutes");
+const friendRequestsRoutes = require("./routes/friendRequestsRoutes");
 const socket = require("socket.io");
 
 dotenv.config();
@@ -25,9 +26,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/user", userRoutes);
 app.use("/api/messages", messagesRoutes);
+app.use("/api/friendRequests", friendRequestsRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello");
+  res.send("CHAT-IT Backend by Maor Arie");
 });
 
 const server = http.createServer(app);
@@ -58,14 +60,15 @@ global.onlineUsers = new Map();
 
 io.on("connection", (socket) => {
   global.chatSocket = socket;
+
   socket.on("add-user", (userId) => {
     onlineUsers.set(userId, socket.id);
   });
 
-  socket.on("send-message", (reciverId, message) => {
+  socket.on("send-message", (senderId, reciverId, message) => {
     const targetSocket = onlineUsers.get(reciverId);
     if (targetSocket) {
-      socket.to(targetSocket).emit("message-recieved", message);
+      socket.to(targetSocket).emit("message-recieved", senderId, message);
     }
   });
 });

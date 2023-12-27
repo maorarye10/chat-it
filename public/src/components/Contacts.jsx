@@ -40,6 +40,28 @@ const Container = styled.div`
         font-size: 1.2rem
       }
     }
+
+    .requests-count {
+        position: relative;
+    }
+
+    .requests-count::after {
+        content: attr(data-text);
+        background-color: Crimson;
+        width: 80%;
+        height: 80%;
+        position: absolute;
+        top: -0.6rem;
+        left: -0.7rem;
+        z-index: 1;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
   }
 
   .contacts-list {
@@ -47,6 +69,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     overflow: auto;
+    padding: 0 0 0.4rem 0;
     gap: 0.4rem;
 
     .contact {
@@ -169,9 +192,9 @@ const Container = styled.div`
   } 
 `;
 
-export const Contacts = ({ contacts, user, handleVisibility }) => {
+export const Contacts = ({ contacts, user, incomingRequestsCount, handleVisibility }) => {
   const {contact: selectedContact, handleContactChange} = useContext(contactContext);
-  const {handleVisibilityToggle} = useContext(addContactScreenToggleContext);
+  const {visible: isAddContactScreenVisible, handleVisibilityToggle} = useContext(addContactScreenToggleContext);
   const navigate = useNavigate();
   /* const toastOptions = {
     position: "bottom-right",
@@ -191,6 +214,11 @@ export const Contacts = ({ contacts, user, handleVisibility }) => {
     handleVisibilityToggle();
   }
 
+  const handleContactClick = (contact) => {
+    handleContactChange(contact);
+    isAddContactScreenVisible && handleVisibilityToggle();
+  }
+
   useEffect(() => {
     handleVisibility(selectedContact);
   }, [selectedContact])
@@ -206,13 +234,18 @@ export const Contacts = ({ contacts, user, handleVisibility }) => {
           <h3>CHAT-IT</h3>
         </div>
         <CustomBtn handleClick={handleAddFriends}>
-          <BsPersonAdd />
+          {
+            incomingRequestsCount > 0 ? 
+            <div data-text={incomingRequestsCount} className='requests-count'><BsPersonAdd/></div> : 
+            <BsPersonAdd />
+          }
+          {/* <BsPersonAdd /> */}
         </CustomBtn>
       </div>
       <div className="contacts-list">
         {contacts.map((contact, index) => {
           return (
-            <div className={`contact${selectedContact && contact._id === selectedContact._id ? ' selected' : ''}`} key={index} onClick={() => handleContactChange(contact)}>
+            <div className={`contact${selectedContact && contact._id === selectedContact._id ? ' selected' : ''}`} key={index} onClick={() => handleContactClick(contact)}>
               <img className='avatar' src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="Contact Image" />
               <h3 className='username'>{contact.username}</h3>
             </div>

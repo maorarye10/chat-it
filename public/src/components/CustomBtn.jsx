@@ -12,14 +12,15 @@ const Button = styled.button`
   border: none;
   cursor: pointer;
   svg {
+    display: block;
     font-size: 1.3rem;
     color: white;
   }
 `;
 
-export const CustomBtn = ({children, handleClick}) => {
+export const CustomBtn = ({children, handleClick, id = '', className = ''}) => {
   return (
-    <Button onClick={handleClick}>
+    <Button className={className} id={id} onClick={handleClick}>
       {children}
     </Button>
   )

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useContext } from 'react'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { getUserContactsRoute, host } from '../utils/APIRoutes'
+import { getUserContactsRoute, host, getRequestsByReciverRoute } from '../utils/APIRoutes'
 import { ToastContainer, toast } from 'react-toastify'
 import { Contacts } from '../components/Contacts'
 import { Welcome } from '../components/Welcome'
@@ -11,9 +11,10 @@ import {io} from 'socket.io-client'
 import { ContactProvider } from '../Context/contactContext'
 import { addContactScreenToggleContext } from '../Context/addContactScreenToggleContext'
 import { AddContact } from '../components/AddContact'
+import { ViewRequests } from '../components/ViewRequests'
 
 const Container = styled.div`
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -40,6 +41,10 @@ const Container = styled.div`
 
     .show-chat-mobile {
       display: block;
+    }
+
+    .contacts-container-fix {
+      max-height: 85vh;
     }
   }
 
@@ -95,9 +100,11 @@ export const Chat = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState([{}]);
+  const [incomingFriendRequests, setIncomingFriendRequests] = useState(null);
   const [selectedContact, setSelectedContact] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const {visible: addContactScreenVisible} = useContext(addContactScreenToggleContext);
+  const [isRequestsScreenVisible, setIsRequestsScreenVisible] = useState(false);
+  const {visible: addContactScreenVisible, handleVisibilityToggle} = useContext(addContactScreenToggleContext);
   
   const toastOptions = {
     position: "bottom-right",
@@ -129,7 +136,6 @@ export const Chat = () => {
       axios.get(`${getUserContactsRoute}/${user._id}`).then((response) => {
         //console.log("Contact:", response.data.contacts);
         setContacts(response.data.contacts);
-        setIsLoaded(true);
       }).catch((err) => {
         if (err.response.status === 500){
           toast.error("An error occured. Please try again Later.", toastOptions);
@@ -138,13 +144,39 @@ export const Chat = () => {
         }
       });
 
+      axios.get(`${getRequestsByReciverRoute}/${user._id}`).then((response) => {
+        //console.log(response.data.requests);
+        setIncomingFriendRequests(response.data.requests);
+      }).catch((err) => {
+        if (err.response.status === 500){
+          toast.error("An error occured. Please try again Later.", toastOptions);
+        }else{
+          toast.error(err.response.data.message, toastOptions);
+        }
+      })
+
       socket.current = io(host);
       socket.current.emit("add-user", user._id);
+
+      setIsLoaded(true);
     }
   }, [user]);
 
   const handleContactChange = (contact) => {
     setSelectedContact(contact);
+  }
+
+  const handleCloseAddContactsScreen = () => {
+    handleVisibilityToggle();
+  } 
+
+  const handleRequestsScreenToggle = () => {
+    setIsRequestsScreenVisible(!isRequestsScreenVisible);
+  }
+
+  const handleRequestsUpdate = (newReqArr, contactToAdd = null) => {
+    setIncomingFriendRequests(newReqArr);
+    contactToAdd && setContacts([...contacts, contactToAdd]);
   }
 
   return (
@@ -155,20 +187,27 @@ export const Chat = () => {
           <ContactProvider>
             <Container className='container'>
               <div className="content">
-                {
-                  addContactScreenVisible ?
-                  <AddContact /> :
-                  <>
-                    <div className={selectedContact && 'contacts-container'}>
-                    <Contacts contacts={contacts} user={user} handleVisibility={handleContactChange}/>
-                    </div>
-                    <div className={`chat-area-container ${selectedContact && 'show-chat-mobile'}`}>
-                      {
-                        selectedContact ? <ChatContainer user={user} socket={socket} handleCloseChat={() => handleContactChange(null)} /> : <Welcome user={user} />
-                      }
-                    </div>
-                  </>
-                }
+                  <div className={`contacts-container-fix${selectedContact || addContactScreenVisible ? ' contacts-container' : ''}`}>
+                    <Contacts contacts={contacts} user={user} incomingRequestsCount={incomingFriendRequests && incomingFriendRequests.length} handleVisibility={handleContactChange}/>
+                  </div>
+                  <div className={`chat-area-container ${selectedContact || addContactScreenVisible ? 'show-chat-mobile' : ''}`}>
+                    {
+                      addContactScreenVisible ?
+                      <>
+                        {
+                          !isRequestsScreenVisible && <AddContact user={user} incomingFriendRequests={incomingFriendRequests} handleCloseScreen={handleCloseAddContactsScreen} handleShowRequestsScreenToggle={handleRequestsScreenToggle}/>
+                        }
+                        {
+                          isRequestsScreenVisible && <ViewRequests user={user} requests={incomingFriendRequests} handleCloseScreen={handleCloseAddContactsScreen} handleRequestsScreenToggle={handleRequestsScreenToggle} handleUpdateRequests={handleRequestsUpdate}/>
+                        }
+                      </>:
+                      <>
+                        {
+                          selectedContact ? <ChatContainer user={user} socket={socket} handleCloseChat={() => handleContactChange(null)} /> : <Welcome user={user} />
+                        }
+                      </>
+                    }
+                  </div>
               </div>
             </Container>
             <ToastContainer />
