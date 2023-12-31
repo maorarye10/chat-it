@@ -233,8 +233,9 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
             .then((response) => {
                 const users = response.data.users
                 //console.log('users recived: ', users);
-                sortIncUsersById(users); // nlog(n)
-                const newUsers = removeIncomingRequestsUsers(users); // nlog(n)
+                sortIncUsersById(users); // O(nlogn)
+                const newUsers = removeIncomingRequestsUsers(users); // O(nlogn)
+                tagUsersIsRequestSent(newUsers); // O(nlogn)
                 //console.log("new users: ", newUsers);
                 setUsers(newUsers);
             }).catch((err) => {
@@ -259,7 +260,8 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
             setLoading(true);
         }
     }, [lastSearchInput]);
-
+    
+    // O(nlogn) - Browser Depended
     const sortIncUsersById = (users) => {
         users.sort((userA, userB) => {
             if (userA._id < userB._id){
@@ -277,7 +279,9 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
         const usersCopy = [...users];
         const newUsersArr = [];
 
+        // O(n)
         incomingFriendRequests.forEach((request) => {
+            //O(log n)
             const index = binarySearch(usersIds, 0, usersIds.length - 1, request.sender._id);
             usersCopy[index] = null;
         });
@@ -290,6 +294,22 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
         return newUsersArr;
     }
 
+    // O(nlogn)
+    const tagUsersIsRequestSent = (users) => {
+        users.forEach(user => user.isRequestSent = false);
+        const usersIds = users.map((user) => user._id);
+        
+        // O(n)
+        friendRequests.forEach((request) => {
+            //O(log n)
+            const index = binarySearch(usersIds, 0, usersIds.length - 1, request.reciver);
+            if (index > -1){
+                users[index].isRequestSent = true;
+            }
+        })
+    }
+
+    //O(log n)
     const binarySearch = (arr, start, end, val) => {
         if (start > end){
             return -1;
@@ -390,7 +410,7 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
                                                 <h3>{user.username}</h3>
                                             </div>
                                             {
-                                                friendRequests.find((req) => req.reciver === user._id) ?
+                                                user.isRequestSent ?
                                                 <CustomBtn id={`btn${index}`} className='pending'>
                                                     <IoMdTime id={`time${index}`} />
                                                 </CustomBtn>:
