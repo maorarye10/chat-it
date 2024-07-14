@@ -145,7 +145,7 @@ export const Chat = () => {
       });
 
       axios.get(`${getRequestsByReciverRoute}/${user._id}`).then((response) => {
-        console.log(response.data.requests);
+        //console.log(response.data.requests);
         setIncomingFriendRequests(response.data.requests);
       }).catch((err) => {
         if (err.response.status === 500) {
