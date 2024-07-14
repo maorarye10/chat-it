@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import {IoMdSearch, IoMdAdd, IoMdTime, IoMdArrowBack} from 'react-icons/io'
+import { IoMdSearch, IoMdAdd, IoMdTime, IoMdArrowBack } from 'react-icons/io'
 import { BsFillEnvelopeFill, BsFillEnvelopeOpenFill } from "react-icons/bs"
 import Loader from '../assets/loader2.gif'
 import axios from 'axios'
@@ -230,44 +230,44 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
     useEffect(() => {
         if (loading) {
             axios.get(`${getUsersRoute}?username=${inputVal}&hostUser=${user._id}`)
-            .then((response) => {
-                const users = response.data.users
-                //console.log('users recived: ', users);
-                sortIncUsersById(users); // O(nlogn)
-                const newUsers = removeIncomingRequestsUsers(users); // O(nlogn)
-                tagUsersIsRequestSent(newUsers); // O(nlogn)
-                //console.log("new users: ", newUsers);
-                setUsers(newUsers);
-            }).catch((err) => {
-                if (err.response.status === 500){
-                  toast.error("An error occured. Please try again Later.", toastOptions);
-                }else{
-                  toast.error(err.response.data.message, toastOptions);
-                }
-                setLoading(false);
-            });
+                .then((response) => {
+                    const users = response.data.users
+                    //console.log('users recived: ', users);
+                    sortIncUsersById(users); // O(nlogn)
+                    const newUsers = removeIncomingRequestsUsers(users); // O(nlogn)
+                    tagUsersIsRequestSent(newUsers); // O(nlogn)
+                    //console.log("new users: ", newUsers);
+                    setUsers(newUsers);
+                }).catch((err) => {
+                    if (err.response.status === 500) {
+                        toast.error("An error occured. Please try again Later.", toastOptions);
+                    } else {
+                        toast.error(err.response.data.message, toastOptions);
+                    }
+                    setLoading(false);
+                });
         }
     }, [loading]);
 
     useEffect(() => {
-        if (users){
+        if (users) {
             setLoading(false);
         }
     }, [users]);
 
     useEffect(() => {
-        if (lastSearchInput){
+        if (lastSearchInput) {
             setLoading(true);
         }
     }, [lastSearchInput]);
-    
+
     // O(nlogn) - Browser Depended
     const sortIncUsersById = (users) => {
         users.sort((userA, userB) => {
-            if (userA._id < userB._id){
+            if (userA._id < userB._id) {
                 return -1;
             }
-            if (userA._id > userB._id){
+            if (userA._id > userB._id) {
                 return 1;
             }
             return 0;
@@ -286,7 +286,7 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
             usersCopy[index] = null;
         });
         usersCopy.forEach((user) => {
-            if (user){
+            if (user) {
                 newUsersArr.push(user);
             }
         })
@@ -298,12 +298,12 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
     const tagUsersIsRequestSent = (users) => {
         users.forEach(user => user.isRequestSent = false);
         const usersIds = users.map((user) => user._id);
-        
+
         // O(n)
         friendRequests.forEach((request) => {
             //O(log n)
             const index = binarySearch(usersIds, 0, usersIds.length - 1, request.reciver);
-            if (index > -1){
+            if (index > -1) {
                 users[index].isRequestSent = true;
             }
         })
@@ -311,17 +311,17 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
 
     //O(log n)
     const binarySearch = (arr, start, end, val) => {
-        if (start > end){
+        if (start > end) {
             return -1;
         }
 
         let mid = Math.floor((start + end) / 2);
 
-        if(arr[mid] === val){
+        if (arr[mid] === val) {
             return mid;
         }
 
-        if (val > arr[mid]){
+        if (val > arr[mid]) {
             return binarySearch(arr, mid + 1, end, val);
         }
 
@@ -341,10 +341,10 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
 
     const handleSendFriendRequest = (index, reciverId) => {
         const btn = document.querySelector(`#btn${index}`);
-        if (!btn.classList.contains('pending')){
+        if (!btn.classList.contains('pending')) {
             const addSVG = document.querySelector(`#add${index}`);
             const timeSVG = document.querySelector(`#time${index}`);
-    
+
             btn.classList.add('pending');
             addSVG.style.display = 'none';
             timeSVG.style.display = 'inline';
@@ -352,13 +352,13 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
             console.log(addSVG);
             console.log(timeSVG);
 
-            axios.post(createRequestRoute, {sender: user._id, reciver: reciverId}).then((response) => {
+            axios.post(createRequestRoute, { sender: user._id, reciver: reciverId }).then((response) => {
                 setFriendRequests([...friendRequests, response.data.request]);
             }).catch((err) => {
-                if (err.response.status === 500){
-                  toast.error("An error occured. Please try again Later.", toastOptions);
-                }else{
-                  toast.error(err.response.data.message, toastOptions);
+                if (err.response.status === 500) {
+                    toast.error("An error occured. Please try again Later.", toastOptions);
+                } else {
+                    toast.error(err.response.data.message, toastOptions);
                 }
             });
         }
@@ -368,66 +368,66 @@ export const AddContact = ({ user, incomingFriendRequests, handleCloseScreen, ha
         handleCloseScreen();
     }
 
-  return (
-    <Container>
-        <div className='header'>
-            <button className='back-btn' onClick={handleGoBack}>
-                <IoMdArrowBack />
-            </button>
-            <form onSubmit={handleSearchSubmit}>
-                <input type="text" placeholder='Search for new contacts' value={inputVal} onChange={(e) => handleTextChange(e.target.value)}/>
-                <button type='submit'>
-                    <IoMdSearch />
+    return (
+        <Container>
+            <div className='header'>
+                <button className='back-btn' onClick={handleGoBack}>
+                    <IoMdArrowBack />
                 </button>
-            </form>
-            <button className='requests-btn' onClick={handleShowRequestsScreenToggle}>
-                {
-                    incomingFriendRequests.length > 0 ? 
-                    <div data-text={incomingFriendRequests.length} className='requests-count'><BsFillEnvelopeFill /></div> : 
-                    <BsFillEnvelopeOpenFill />
-                }
-            </button>
-        </div>
-        <div className='search-container'>
-            {
-                !users ?
-                <div className='place-holder'>
-                 <span>Click on </span><IoMdSearch /><span> to apply the search.</span><span>Results will be shown here.</span>
-                </div> :
-                <>
+                <form onSubmit={handleSearchSubmit}>
+                    <input type="text" placeholder='Search for new contacts' value={inputVal} onChange={(e) => handleTextChange(e.target.value)} />
+                    <button type='submit'>
+                        <IoMdSearch />
+                    </button>
+                </form>
+                <button className='requests-btn' onClick={handleShowRequestsScreenToggle}>
                     {
-                        loading ?
-                        <img src={Loader} alt='Loader gif' className='loader'/>:
-                        <div className='users-list'>
-                            {
-                                users.length === 0 ? 
-                                <div className='place-holder'>No users found</div>:
-                                users.map((user, index) => {
-                                    return (
-                                        <div className='user-card' key={index}>
-                                            <div className='user-info'>
-                                                <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
-                                                <h3>{user.username}</h3>
-                                            </div>
-                                            {
-                                                user.isRequestSent ?
-                                                <CustomBtn id={`btn${index}`} className='pending'>
-                                                    <IoMdTime id={`time${index}`} />
-                                                </CustomBtn>:
-                                                <CustomBtn id={`btn${index}`} handleClick={() => handleSendFriendRequest(index, user._id)}>
-                                                    <IoMdAdd id={`add${index}`} />
-                                                    <IoMdTime id={`time${index}`} style={{display: 'none'}} />
-                                                </CustomBtn>
-                                            }
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
+                        incomingFriendRequests !== null && incomingFriendRequests.length > 0 ?
+                            <div data-text={incomingFriendRequests.length} className='requests-count'><BsFillEnvelopeFill /></div> :
+                            <BsFillEnvelopeOpenFill />
                     }
-                </>
-            }
-        </div>
-    </Container>
-  )
+                </button>
+            </div>
+            <div className='search-container'>
+                {
+                    !users ?
+                        <div className='place-holder'>
+                            <span>Click on </span><IoMdSearch /><span> to apply the search.</span><span>Results will be shown here.</span>
+                        </div> :
+                        <>
+                            {
+                                loading ?
+                                    <img src={Loader} alt='Loader gif' className='loader' /> :
+                                    <div className='users-list'>
+                                        {
+                                            users.length === 0 ?
+                                                <div className='place-holder'>No users found</div> :
+                                                users.map((user, index) => {
+                                                    return (
+                                                        <div className='user-card' key={index}>
+                                                            <div className='user-info'>
+                                                                <img className='avatar' src={`data:image/svg+xml;base64,${user.avatarImage}`} alt="Contact Image" />
+                                                                <h3>{user.username}</h3>
+                                                            </div>
+                                                            {
+                                                                user.isRequestSent ?
+                                                                    <CustomBtn id={`btn${index}`} className='pending'>
+                                                                        <IoMdTime id={`time${index}`} />
+                                                                    </CustomBtn> :
+                                                                    <CustomBtn id={`btn${index}`} handleClick={() => handleSendFriendRequest(index, user._id)}>
+                                                                        <IoMdAdd id={`add${index}`} />
+                                                                        <IoMdTime id={`time${index}`} style={{ display: 'none' }} />
+                                                                    </CustomBtn>
+                                                            }
+                                                        </div>
+                                                    )
+                                                })
+                                        }
+                                    </div>
+                            }
+                        </>
+                }
+            </div>
+        </Container>
+    )
 }
